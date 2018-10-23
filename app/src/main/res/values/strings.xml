@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ToDoSample</string>
+    <string name="menu_option_add">Add</string>
+</resources>
