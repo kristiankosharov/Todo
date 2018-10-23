@@ -38,6 +38,12 @@ class MainActivityTest {
                 .check(matches(withText("Remove clicked")))
     }
 
+    @Test
+    fun showAddDialog() {
+        onView(withId(R.id.add_todo)).perform(click())
+        onView(withId(R.id.todo_description)).check(matches(isDisplayed()))
+    }
+
     private fun androidHomeMatcher(): Matcher<View> {
         return allOf(
                 withParent(withClassName(`is`(Toolbar::class.java!!.getName()))),
