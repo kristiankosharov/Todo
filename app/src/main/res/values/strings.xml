@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">ToDoSample</string>
     <string name="menu_option_add">Add</string>
+    <string name="dialog_title">Add note</string>
+    <string name="dialog_button_add">Add</string>
+    <string name="dialog_hint_note">Note</string>
 </resources>
