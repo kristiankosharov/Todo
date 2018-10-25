@@ -1,22 +1,26 @@
 package demo.todosample.repository
 
 import androidx.lifecycle.LiveData
+import demo.todosample.db.TodoDao
 import demo.todosample.entity.Todo
 import demo.todosample.util.AppExecutors
+import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class TodoRepository(
+@Singleton
+class TodoRepository @Inject constructor(
         private val appExecutors: AppExecutors,
-        private val todoRepository: TodoRepository
+        private val todoDao: TodoDao
 ) {
 
     fun insertTodo(item: Todo) {
         appExecutors.diskIO().execute {
-            todoRepository.insertTodo(item)
+            todoDao.insert(item)
         }
     }
 
     fun loadTodos(): LiveData<List<Todo>> {
-        return todoRepository.loadTodos()
+        val result: LiveData<List<Todo>> = todoDao.getAllItems()
+        return result
     }
 }

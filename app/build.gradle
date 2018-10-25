@@ -25,9 +25,12 @@ android {
     dataBinding {
         enabled = true
     }
-
     kapt {
         generateStubs = true
+    }
+    sourceSets {
+        androidTest.java.srcDirs += "src/test-common/java"
+        test.java.srcDirs += "src/test-common/java"
     }
 }
 
@@ -66,15 +69,15 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.1.0-beta02'
     androidTestImplementation "androidx.arch.core:core-testing:2.0.0"
     androidTestImplementation 'androidx.test.ext:junit:1.0.0-beta02'
-//    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     androidTestImplementation "androidx.test.espresso:espresso-core:3.1.0-beta02"
     // Required for instrumented tests
     androidTestImplementation 'androidx.annotation:annotation:1.0.0'
-//    implementation 'androidx.test:runner:1.1.0-beta02'
     androidTestImplementation 'androidx.test:runner:1.1.0-beta02'
     androidTestUtil 'androidx.test:orchestrator:1.1.0-beta02'
+    testImplementation "androidx.arch.core:core-testing:2.0.0"
 
     // Unit testing
     testImplementation 'junit:junit:4.12'
+    testImplementation "org.mockito:mockito-core:2.23.0"
 
 }
