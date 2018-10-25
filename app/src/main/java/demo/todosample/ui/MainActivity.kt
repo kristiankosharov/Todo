@@ -8,15 +8,23 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
+import demo.bookssample.di.Injectable
 import demo.todosample.R
 import demo.todosample.databinding.ActivityMainBinding
+import demo.todosample.util.AppExecutors
 import java.util.logging.Logger
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Injectable {
 
     private val logger: Logger = Logger.getLogger(MainActivity::class.simpleName)
     private lateinit var binding: ActivityMainBinding
+
+    private val mainViewModel: MainViewModel by lazy { ViewModelProviders.of(this).get(MainViewModel::class.java) }
+    @Inject
+    lateinit var appExecutors: AppExecutors
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
