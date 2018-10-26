@@ -8,8 +8,10 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
+import dagger.android.AndroidInjection
 import demo.bookssample.di.Injectable
 import demo.todosample.R
 import demo.todosample.databinding.ActivityMainBinding
@@ -22,11 +24,18 @@ class MainActivity : AppCompatActivity(), Injectable {
     private val logger: Logger = Logger.getLogger(MainActivity::class.simpleName)
     private lateinit var binding: ActivityMainBinding
 
-    private val mainViewModel: MainViewModel by lazy { ViewModelProviders.of(this).get(MainViewModel::class.java) }
+    @Inject
+    lateinit var mainViewModelFactory: MainViewModelFactory
+    private val mainViewModel: MainViewModel by lazy {
+        ViewModelProviders
+                .of(this, mainViewModelFactory)
+                .get(MainViewModel::class.java)
+    }
     @Inject
     lateinit var appExecutors: AppExecutors
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
@@ -36,6 +45,10 @@ class MainActivity : AppCompatActivity(), Injectable {
             // TODO Handle remove click action
             Snackbar.make(binding.todoList, "Remove clicked", Snackbar.LENGTH_LONG).show()
         }
+
+        mainViewModel.todos.observe(this, Observer {
+            logger.info(it.toString())
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

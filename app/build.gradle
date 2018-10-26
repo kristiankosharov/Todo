@@ -3,6 +3,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-allopen'
+
+
+allOpen {
+    // allows mocking for classes w/o directly opening them for release builds
+    annotation 'demo.todosample.OpenClass'
+}
 
 android {
     compileSdkVersion 28
@@ -73,11 +80,12 @@ dependencies {
     // Required for instrumented tests
     androidTestImplementation 'androidx.annotation:annotation:1.0.0'
     androidTestImplementation 'androidx.test:runner:1.1.0-beta02'
+    androidTestImplementation "org.mockito:mockito-android:2.18.0"
+
     androidTestUtil 'androidx.test:orchestrator:1.1.0-beta02'
-    testImplementation "androidx.arch.core:core-testing:2.0.0"
 
     // Unit testing
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:2.23.0"
-
+    testImplementation "androidx.arch.core:core-testing:2.0.0"
 }
