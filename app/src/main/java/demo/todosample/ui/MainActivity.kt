@@ -76,7 +76,6 @@ class MainActivity : AppCompatActivity(), Injectable {
 
                 }
             }
-
         }
         //  and showing
         notesDialog?.show()

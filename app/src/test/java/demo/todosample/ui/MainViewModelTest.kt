@@ -1,8 +1,8 @@
 package demo.todosample.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import demo.todosample.LiveDataTestUtil.getValue
+import androidx.lifecycle.MutableLiveData
 import demo.todosample.TestTodoUtil
 import demo.todosample.entity.Todo
 import demo.todosample.mock
