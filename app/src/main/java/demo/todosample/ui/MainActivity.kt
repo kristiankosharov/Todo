@@ -7,16 +7,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.AndroidInjection
 import demo.bookssample.di.Injectable
 import demo.todosample.R
 import demo.todosample.databinding.ActivityMainBinding
 import demo.todosample.entity.Todo
+import demo.todosample.ui.common.SimpleItemTouchHelperCallback
 import demo.todosample.util.AppExecutors
 import demo.todosample.util.NotesDialog
 import java.util.logging.Logger
 import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity(), Injectable, NotesDialog.NoteActions {
 
@@ -49,9 +54,17 @@ class MainActivity : AppCompatActivity(), Injectable, NotesDialog.NoteActions {
             Snackbar.make(binding.todoList, "Remove clicked", Snackbar.LENGTH_LONG).show()
         }
 
+        val dividerItemDecoration = DividerItemDecoration(this,
+                (binding.todoList.layoutManager as LinearLayoutManager).orientation)
         binding.todoList.adapter = adapter
+        binding.todoList.addItemDecoration(dividerItemDecoration)
+        val callback = SimpleItemTouchHelperCallback(adapter)
+        val touchHelper = ItemTouchHelper(callback)
+        touchHelper.attachToRecyclerView(binding.todoList)
+
+
         mainViewModel.todos.observe(this, Observer {
-            adapter.submitList(it)
+            adapter.submitList(it as MutableList<Todo>)
             it.forEach { logger.info(it.toString()) }
         })
     }

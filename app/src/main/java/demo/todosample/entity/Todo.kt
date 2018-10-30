@@ -17,6 +17,11 @@ data class Todo(
     @Ignore
     val convertedTime = getTime(createdTime)
 
+    @Ignore
+    var position: Int = 0
+
+    var forDelete: Boolean = false
+
     private fun getTime(timestamp: Long): String {
         val formatter = SimpleDateFormat("HH:mm:SS dd/MM/yyyy", Locale.getDefault())
         return formatter.format(Date(timestamp))
