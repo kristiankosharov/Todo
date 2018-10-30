@@ -1,6 +1,7 @@
 package demo.todosample.util
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import demo.todosample.R
 import demo.todosample.databinding.DialogAddNoteBinding
 import demo.todosample.entity.Todo
+
 
 class NotesDialog : AppCompatDialogFragment() {
 
@@ -33,6 +35,13 @@ class NotesDialog : AppCompatDialogFragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        val window = dialog.window
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        window.setGravity(Gravity.CENTER)
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(BUNDLE_DESCRIPTION, binding.todoDescription.text.toString())
@@ -44,12 +53,6 @@ class NotesDialog : AppCompatDialogFragment() {
             binding.todoDescription.setText(savedInstanceState.getString(BUNDLE_DESCRIPTION))
         }
     }
-
-//    override fun onConfigurationChanged(newConfig: Configuration?) {
-//        super.onConfigurationChanged(newConfig)
-//        this.dismiss()
-//        show(fragmentManager, tag)
-//    }
 
     private fun cancelClickListener() {
         binding.btnCancel.setOnClickListener {
