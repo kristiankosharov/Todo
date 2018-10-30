@@ -1,52 +1,80 @@
 package demo.todosample.util
 
-import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import androidx.appcompat.app.AlertDialog
-import com.google.android.material.textfield.TextInputEditText
+import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.databinding.DataBindingUtil
 import demo.todosample.R
+import demo.todosample.databinding.DialogAddNoteBinding
 import demo.todosample.entity.Todo
 
+class NotesDialog : AppCompatDialogFragment() {
 
-class NotesDialog(context: Context) : BaseDialogHelper() {
-    override val dialogView: View by lazy {
-        LayoutInflater.from(context).inflate(R.layout.dialog_add_note, null)
-    }
-    override val builder: AlertDialog.Builder = AlertDialog.Builder(context).setView(dialogView)
-
-    val edtText: TextInputEditText by lazy {
-        dialogView.findViewById<TextInputEditText>(R.id.todo_description)
+    companion object TAG {
+        fun getTag() = NotesDialog::class.simpleName.toString()
+        const val BUNDLE_DESCRIPTION = "save_state_description"
     }
 
-    val btnAdd: Button by lazy {
-        dialogView.findViewById<Button>(R.id.btn_add)
-    }
-    val btnCancel: Button by lazy {
-        dialogView.findViewById<Button>(R.id.btn_cancel)
+    private lateinit var actions: NoteActions
+    private lateinit var binding: DialogAddNoteBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        actions = context as NoteActions
     }
 
-    fun cancelClickListener(func: ((Todo) -> Unit)? = null) =
-            with(btnCancel) {
-                setClickListenerToDialogButton(func)
-            }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.dialog_add_note, container, false)
 
-    fun addClickListener(func: ((Todo) -> Unit)? = null) =
-            with(btnAdd) {
-                setClickListenerToDialogButton(func)
-            }
+        cancelClickListener()
+        addClickListener()
+        return binding.root
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(BUNDLE_DESCRIPTION, binding.todoDescription.text.toString())
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_DESCRIPTION)) {
+            binding.todoDescription.setText(savedInstanceState.getString(BUNDLE_DESCRIPTION))
+        }
+    }
+
+//    override fun onConfigurationChanged(newConfig: Configuration?) {
+//        super.onConfigurationChanged(newConfig)
+//        this.dismiss()
+//        show(fragmentManager, tag)
+//    }
+
+    private fun cancelClickListener() {
+        binding.btnCancel.setOnClickListener {
+            this.dismiss()
+        }
+    }
+
+    private fun addClickListener() {
+        binding.btnAdd.setOnClickListener {
+            actions.addNote(createTodo())
+            this.dismiss()
+        }
+    }
+
+    fun clear() {
+        binding.todoDescription.setText("")
+    }
 
     private fun createTodo(): Todo {
-        val description = edtText.text.toString()
+        val description = binding.todoDescription.text.toString()
         val time: Long = System.currentTimeMillis()
         return Todo(description = description, createdTime = time)
     }
 
-    //  view click listener as extension function
-    private fun View.setClickListenerToDialogButton(func: ((Todo) -> Unit)?) =
-            setOnClickListener {
-                func?.invoke(createTodo())
-                dialog?.dismiss()
-            }
+    interface NoteActions {
+        fun addNote(item: Todo)
+    }
 }

@@ -22,6 +22,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/todo_list"
             android:layout_width="match_parent"
+            android:background="@android:color/holo_blue_bright"
             android:layout_height="0dp"
             app:layoutManager="LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
