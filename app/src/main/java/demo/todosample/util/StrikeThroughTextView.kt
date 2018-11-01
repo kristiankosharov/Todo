@@ -5,12 +5,12 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import demo.todosample.R
 
 
-class StrikeThroughTextView : TextView {
+class StrikeThroughTextView : AppCompatTextView {
     lateinit var paint: Paint
     var addStrike = false
 
