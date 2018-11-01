@@ -25,4 +25,16 @@ class TodoRepository @Inject constructor(
         val result: LiveData<List<Todo>> = todoDao.getAllItems()
         return result
     }
+
+    fun updateTodo(item: Todo) {
+        appExecutors.diskIO().execute {
+            todoDao.update(item)
+        }
+    }
+
+    fun deleteAll() {
+        appExecutors.diskIO().execute {
+            todoDao.deleteAll()
+        }
+    }
 }

@@ -24,28 +24,32 @@
         android:clickable="true"
         android:focusable="true"
         android:foreground="?selectableItemBackground"
-        android:onClick="@{() -> todoAction.edit()}">
+        android:onClick="@{() -> todoAction.edit(todoEntity)}">
 
-        <TextView
+        <demo.todosample.util.StrikeThroughTextView
             android:id="@+id/todo_item"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
+            android:inputType="text|textAutoComplete|textAutoCorrect|textCapCharacters"
+            android:onClick="@{() -> todoAction.edit(todoEntity)}"
             android:text="@{todoEntity.description}"
+            android:textColor="@color/dark"
             android:textSize="16sp"
-            android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/action_drag"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="asdadas" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/created_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
+            android:clickable="true"
+            android:focusable="true"
             android:text="@{todoEntity.convertedTime}"
+            android:textColor="@color/darkGray"
             android:textSize="10sp"
             app:layout_constraintRight_toLeftOf="@+id/action_drag"
             app:layout_constraintTop_toBottomOf="@+id/todo_item"
@@ -56,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:src="@mipmap/ic_drag"
+            android:src="@drawable/ic_drag"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

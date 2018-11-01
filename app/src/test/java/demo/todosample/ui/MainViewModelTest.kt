@@ -1,8 +1,8 @@
 package demo.todosample.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import demo.todosample.LiveDataTestUtil.getValue
 import androidx.lifecycle.MutableLiveData
+import demo.todosample.LiveDataTestUtil.getValue
 import demo.todosample.TestTodoUtil
 import demo.todosample.entity.Todo
 import demo.todosample.mock
@@ -20,8 +20,6 @@ import org.mockito.Mockito.verify
 
 @RunWith(JUnit4::class)
 class MainViewModelTest {
-
-
     private lateinit var repoViewModel: MainViewModel
 
     private val repository: TodoRepository = mock()
@@ -44,7 +42,7 @@ class MainViewModelTest {
         `when`(repository.loadTodos()).thenReturn(dbData)
 
         // Ger real data from repo
-        val realData = getValue(repoViewModel.todos)
+        val realData = getValue(repoViewModel.getTodos())
 
         // Check if loadTodos is called
         verify(repository).loadTodos()
@@ -66,7 +64,7 @@ class MainViewModelTest {
         verify(repository).insertTodo(todo)
 
         // Compare real data with mocked data
-        val realData = getValue(repoViewModel.todos)
+        val realData = getValue(repoViewModel.getTodos())
         assertThat(listOf(todo), `is`(realData))
     }
 }

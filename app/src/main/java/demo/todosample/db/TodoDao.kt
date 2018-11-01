@@ -1,10 +1,7 @@
 package demo.todosample.db
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import demo.todosample.entity.Todo
 
 @Dao
@@ -17,4 +14,10 @@ interface TodoDao {
 
     @Delete
     fun delete(item: Todo)
+
+    @Update
+    fun update(item: Todo)
+
+    @Query("DELETE FROM Todos")
+    fun deleteAll()
 }

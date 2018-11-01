@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import dagger.android.AndroidInjection
 import demo.bookssample.di.Injectable
 import demo.todosample.R
 import demo.todosample.databinding.ActivityMainBinding
 import demo.todosample.entity.Todo
 import demo.todosample.ui.common.SimpleItemTouchHelperCallback
+import demo.todosample.ui.common.TodoCallback
 import demo.todosample.util.AppExecutors
 import demo.todosample.util.NotesDialog
 import java.util.logging.Logger
@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity(), Injectable, NotesDialog.NoteActions {
 
     @Inject
     lateinit var mainViewModelFactory: MainViewModelFactory
+
     private val mainViewModel: MainViewModel by lazy {
         ViewModelProviders
                 .of(this, mainViewModelFactory)
@@ -39,16 +40,22 @@ class MainActivity : AppCompatActivity(), Injectable, NotesDialog.NoteActions {
 
     @Inject
     lateinit var appExecutors: AppExecutors
+
     private val adapter: TodoAdapter by lazy {
-        TodoAdapter(appExecutors)
+        TodoAdapter(object : TodoCallback {
+            override fun edit(item: Todo) {
+                mainViewModel.updateTodo(item)
+            }
+
+        }, appExecutors)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setSupportActionBar(binding.mainToolbar)
-        binding.mainToolbar.setNavigationIcon(android.R.drawable.ic_menu_delete)
+        binding.mainToolbar.setNavigationIcon(R.drawable.ic_delete_inactive)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.mainToolbar.setNavigationOnClickListener {
             // TODO Handle remove click action
             Snackbar.make(binding.todoList, "Remove clicked", Snackbar.LENGTH_LONG).show()
@@ -56,6 +63,7 @@ class MainActivity : AppCompatActivity(), Injectable, NotesDialog.NoteActions {
 
         val dividerItemDecoration = DividerItemDecoration(this,
                 (binding.todoList.layoutManager as LinearLayoutManager).orientation)
+        binding.todoList.setEmptyView(binding.emptyContainer)
         binding.todoList.adapter = adapter
         binding.todoList.addItemDecoration(dividerItemDecoration)
         val callback = SimpleItemTouchHelperCallback(adapter)
@@ -63,10 +71,15 @@ class MainActivity : AppCompatActivity(), Injectable, NotesDialog.NoteActions {
         touchHelper.attachToRecyclerView(binding.todoList)
 
 
-        mainViewModel.todos.observe(this, Observer {
+        mainViewModel.getTodos().observe(this, Observer {
             adapter.submitList(it as MutableList<Todo>)
             it.forEach { logger.info(it.toString()) }
         })
+    }
+
+    /** For testing **/
+    fun clearList() {
+        mainViewModel.deleteAll()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

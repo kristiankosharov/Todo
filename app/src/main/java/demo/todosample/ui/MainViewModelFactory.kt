@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import demo.todosample.repository.TodoRepository
 import javax.inject.Inject
 
-class MainViewModelFactory @Inject constructor(
+open class MainViewModelFactory @Inject constructor(
         private val todoRepository: TodoRepository
 ) : ViewModelProvider.NewInstanceFactory() {
 

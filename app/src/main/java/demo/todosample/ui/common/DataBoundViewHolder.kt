@@ -14,7 +14,7 @@ class DataBoundViewHolder<out T : ViewDataBinding> constructor(val binding: T) :
         RecyclerView.ViewHolder(binding.root), ItemTouchHelperViewHolder {
 
     override fun onItemSelected() {
-        binding.root.setBackgroundColor(ContextCompat.getColor(binding.root.context, R.color.hover_effect))
+        binding.root.setBackgroundColor(ContextCompat.getColor(binding.root.context, R.color.hoverEffect))
     }
 
     override fun onItemClear() {

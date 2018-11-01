@@ -12,15 +12,12 @@ data class Todo(
         @PrimaryKey(autoGenerate = true)
         val id: Int = 0,
         val description: String,
+        var position: Int = 0,
+        var forDelete: Boolean = false,
         val createdTime: Long
 ) {
     @Ignore
     val convertedTime = getTime(createdTime)
-
-    @Ignore
-    var position: Int = 0
-
-    var forDelete: Boolean = false
 
     private fun getTime(timestamp: Long): String {
         val formatter = SimpleDateFormat("HH:mm:SS dd/MM/yyyy", Locale.getDefault())

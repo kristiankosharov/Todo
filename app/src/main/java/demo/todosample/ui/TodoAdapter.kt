@@ -1,6 +1,5 @@
 package demo.todosample.ui
 
-import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -14,10 +13,10 @@ import demo.todosample.ui.common.DataBoundViewHolder
 import demo.todosample.ui.common.ItemTouchHelperAdapter
 import demo.todosample.ui.common.TodoCallback
 import demo.todosample.util.AppExecutors
-import java.util.logging.Logger
 
 
 class TodoAdapter(
+        val clickListener: TodoCallback,
         appExecutors: AppExecutors,
         diffCallback: DiffUtil.ItemCallback<Todo> = object : DiffUtil.ItemCallback<Todo>() {
             override fun areItemsTheSame(oldItem: Todo, newItem: Todo): Boolean {
@@ -25,7 +24,12 @@ class TodoAdapter(
             }
 
             override fun areContentsTheSame(oldItem: Todo, newItem: Todo): Boolean {
-                return oldItem == newItem
+                val result = oldItem == newItem
+                return result
+            }
+
+            override fun getChangePayload(oldItem: Todo, newItem: Todo): Any {
+                return newItem
             }
         }
 ) : ListAdapter<Todo, DataBoundViewHolder<ItemTodoBinding>>(
@@ -39,10 +43,23 @@ class TodoAdapter(
         return DataBoundViewHolder(binding)
     }
 
+    override fun onBindViewHolder(holder: DataBoundViewHolder<ItemTodoBinding>, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isNotEmpty()) {
+            val item = payloads[0] as Todo
+            bindHolder(item, holder, position)
+        } else {
+            super.onBindViewHolder(holder, position, payloads)
+        }
+    }
+
     override fun onBindViewHolder(holder: DataBoundViewHolder<ItemTodoBinding>, position: Int) {
         val item = getItem(position)
+        bindHolder(item, holder, position)
+    }
+
+    private fun bindHolder(item: Todo, holder: DataBoundViewHolder<ItemTodoBinding>, position: Int) {
         item.position = position
-        bind(holder.binding, item, position)
+        bind(holder.binding, item)
         holder.binding.executePendingBindings()
     }
 
@@ -56,17 +73,15 @@ class TodoAdapter(
                 )
     }
 
-    private fun bind(binding: ItemTodoBinding, item: Todo, position: Int) {
+    private fun bind(binding: ItemTodoBinding, item: Todo) {
         binding.todoAction = object : TodoCallback {
-            override fun edit() {
+            override fun edit(item: Todo) {
                 item.forDelete = !item.forDelete
-
-                Logger.getLogger("ADAPTER").info("Click: " + item.forDelete + " , " + item.description + " , " + position)
-                notifyItemChanged(position)
+                if (item.forDelete) binding.todoItem.strikeThrough() else binding.todoItem.release()
+                clickListener.edit(item)
             }
         }
         binding.todoEntity = item
-        binding.todoItem.paintFlags = if (item.forDelete) Paint.STRIKE_THRU_TEXT_FLAG else 0
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int) {

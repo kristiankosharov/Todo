@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
-import dagger.android.support.HasSupportFragmentInjector
 import demo.todosample.TodoApplication
 
 object AppInjector {
@@ -48,7 +47,7 @@ object AppInjector {
     }
 
     private fun handleActivity(activity: Activity) {
-        if (activity is HasSupportFragmentInjector) {
+        if (activity is Injectable) {
             AndroidInjection.inject(activity)
         }
         if (activity is FragmentActivity) {

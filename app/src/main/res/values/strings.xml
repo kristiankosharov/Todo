@@ -4,4 +4,5 @@
     <string name="dialog_title">Add note</string>
     <string name="dialog_button_add">Add</string>
     <string name="dialog_hint_note">Note</string>
+    <string name="empty_list_description">Plan your future!\n\nWhat would be the first step in the process?\nSimply add your planned tasks and be prepared &#128521;</string>
 </resources>
